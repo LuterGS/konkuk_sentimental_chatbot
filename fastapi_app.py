@@ -1,7 +1,8 @@
 import os
 
+import google.cloud.logging_v2
 import uvicorn
-from fastapi import FastAPI, Query
+from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from starlette.requests import Request
 from starlette.templating import Jinja2Templates
@@ -13,6 +14,11 @@ from utils.python_logger import TraceLogger
 class MainFastAPI:
 
     def __init__(self):
+
+        # setup logging
+        client = google.cloud.logging_v2.Client()
+        client.setup_logging()
+
         self._url = '0.0.0.0'
         self._logger = TraceLogger()
         self._app = FastAPI(
