@@ -7,7 +7,7 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.GOOGLE_PROJECT_ID }}
-  GAR_LOCATION: ${{ secrets.GOOGLE_ARTIFACT_REGISTRY_LOCATION }}
+  GAR_LOCATION: ${{ secrets.GOOGLE_REGION }}
   SERVICE: ${{ secrets.GOOGLE_CLOUD_RUN_NAME }}
   REGION: ${{ secrets.GOOGLE_REGION }}
   GCP_SA_KEY: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
