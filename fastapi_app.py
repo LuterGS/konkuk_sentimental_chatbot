@@ -23,6 +23,7 @@ class MainFastAPI:
             methods=["GET"]
         )
 
+
     @property
     def _request_conversation_property(self):
         return {
