@@ -3,7 +3,10 @@ import os
 import uvicorn
 from fastapi import FastAPI, Query
 from fastapi.responses import JSONResponse
+from starlette.requests import Request
+from starlette.templating import Jinja2Templates
 
+from dto.rest_dtos import Message
 from utils.python_logger import TraceLogger
 
 
@@ -20,8 +23,23 @@ class MainFastAPI:
         self._app.add_api_route(
             **self._request_conversation_property,
             endpoint=self.request_conversation,
+            methods=["POST"]
+        )
+        self._app.add_api_route(
+            **self._main_page_property,
+            endpoint=self.main_page,
             methods=["GET"]
         )
+        self._templates = Jinja2Templates(directory="templates")
+
+    @property
+    def _main_page_property(self):
+        return {
+            "path": "/"
+        }
+
+    def main_page(self, request: Request):
+        return self._templates.TemplateResponse("main_page.html", {"request": request})
 
 
     @property
@@ -45,18 +63,11 @@ class MainFastAPI:
             }
         }
 
-    async def request_conversation(
-        self,
-        message: str = Query(
-            False,
-            title='사용자가 입력한, 챗봇이 입력받을 문장',
-            example='오늘 지각해서 밥도 못 먹었어.',
-            description='사용자가 입력한 문장입니다. 해당 문장을 챗봇 서버로 보내 결과를 받아옵니다.')
-    ):
+    async def request_conversation(self, message: Message):
         self._logger.info(f"get {message}")
-        return {"response": message}
+        return {"response": message.userInput}
 
     def start_app(self):
-        uvicorn.run(self._app, host=self._url, port=int(os.getenv('PORT')))
+        uvicorn.run(self._app, host=self._url, port=int(os.getenv('PORT') or 8080))
 
 

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>건국대학교 감성챗봇</title>
+</head>
+<body>
+    <label>
+        <input type="text" id="userInput" size="20"/>
+    </label>
+    <input type="button" id="button1" onclick="button1_click();" value="전송" />
+    <h3 id="chatbotResponse">안녕1</h3>
+
+    <script>
+        async function button1_click() {
+            const chatbotResponse = await fetch(
+                "/conversation", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({userInput: document.getElementById("userInput").value})
+                }
+            )
+            const retrVal = await chatbotResponse.json()
+            document.getElementById("chatbotResponse").innerText = retrVal["response"]
+        }
+    </script>
+</body>
+</html>
