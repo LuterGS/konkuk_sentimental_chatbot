@@ -2,29 +2,43 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>건국대학교 감성챗봇</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BART 기반 감성챗봇</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <script src="script.js" defer></script>
 </head>
 <body>
-    <label>
-        <input type="text" id="userInput" size="20"/>
-    </label>
-    <input type="button" id="button1" onclick="button1_click();" value="전송" />
-    <h3 id="chatbotResponse">안녕1</h3>
+    <header>
+        <h1 class="title">BART 기반 감성챗봇</h1>
+        <p class="description">사용자가 입력한 문장의 감성을 분석해 해당 감성에 부합하는 문장을 내는 챗봇 프로그램입니다.<br>
+                            챗봇 프로그램을 종료하고 싶다면 "q"를 입력해주세요.
+        </p>
+    </header>
+    <main>
+        <!-- 스크롤로 만들 것 -->
+        <ul>
+            <li>
+                <!-- USER -->
+                <div class="user">
+                    <img src="./img/user.png" alt="" class="user-img">
+                    <div class="user-input">
+                        <textarea name="" placeholder="문장을 입력해주세요." maxlength="200" cols="30" rows="5" id="user-input-text"></textarea>
+                        <button type="button" id="user-input-btn">입력</button>
+                    </div>
+                </div>
 
-    <script>
-        async function button1_click() {
-            const chatbotResponse = await fetch(
-                "/conversation", {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({userInput: document.getElementById("userInput").value})
-                }
-            )
-            const retrVal = await chatbotResponse.json()
-            document.getElementById("chatbotResponse").innerText = retrVal["response"]
-        }
-    </script>
+                <!-- ChatBot -->
+                <div class="chatbot">
+                    <p id="chatbot-output"></p>
+                    <img src="./img/chatbot.png" alt="" class="chatbot-img">
+                </div>
+            </li>
+
+            <!-- 동일한 li 태그 동적 생성 -->
+            <!-- 생성 후, 전 li 태그의 button은 비활성화 -->
+        </ul>
+    </main>
 </body>
 </html>
