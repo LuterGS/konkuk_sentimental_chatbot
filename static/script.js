@@ -59,7 +59,7 @@ function createChatbotLi(chatbotOutput) {
   chatList.appendChild(li);
 }
 
-function processing() {
+async function processing() {
   const msg = chatInput.value;
   if (!checkValue(msg)) {
     return;
