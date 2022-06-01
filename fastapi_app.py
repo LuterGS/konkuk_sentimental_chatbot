@@ -5,6 +5,7 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from starlette.requests import Request
+from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
 
 from dto.rest_dtos import Message
@@ -16,8 +17,8 @@ class MainFastAPI:
     def __init__(self):
 
         # setup logging
-        client = google.cloud.logging_v2.Client()
-        client.setup_logging()
+        # client = google.cloud.logging_v2.Client()
+        # client.setup_logging()
 
         self._url = '0.0.0.0'
         self._logger = TraceLogger()
@@ -26,6 +27,10 @@ class MainFastAPI:
             version='0.0.1',
             root_path='/'
         )
+        # set static files
+        self._app.mount("/static", StaticFiles(directory="static"), name="static")
+        # set Jinja 2 HTML template
+        self._templates = Jinja2Templates(directory="templates")
         self._app.add_api_route(
             **self._request_conversation_property,
             endpoint=self.request_conversation,
@@ -36,7 +41,6 @@ class MainFastAPI:
             endpoint=self.main_page,
             methods=["GET"]
         )
-        self._templates = Jinja2Templates(directory="templates")
 
     @property
     def _main_page_property(self):
