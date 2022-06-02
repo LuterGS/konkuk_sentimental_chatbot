@@ -45,7 +45,6 @@ jobs:
           registry: ${{ env.GAR_LOCATION }}-docker.pkg.dev
 
       - name: Set envs variable
-        id: set envs variable
         run: |
           echo "${{ env.AI_SERVER_URL }}" >> ./envs
 
