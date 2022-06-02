@@ -1,12 +1,14 @@
 import os
 
 import google.cloud.logging_v2
+import requests
 import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from starlette.requests import Request
 from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
+from dotenv import load_dotenv
 
 from dto.rest_dtos import Message
 from utils.python_logger import TraceLogger
@@ -19,6 +21,10 @@ class MainFastAPI:
         # setup logging
         # client = google.cloud.logging_v2.Client()
         # client.setup_logging()
+
+        # test
+        load_dotenv(dotenv_path="envs")
+        self._ai_server_url = os.getenv("AI_SERVER_URL")
 
         self._url = '0.0.0.0'
         self._logger = TraceLogger()
@@ -74,8 +80,11 @@ class MainFastAPI:
         }
 
     async def request_conversation(self, message: Message):
-        self._logger.info(f"get {message}")
-        return {"response": message.userInput}
+        response = requests.post(self._ai_server_url, {"userInput": message}).json()
+        ai_response: str = response["response"]
+        ai_response = ai_response.replace("<usr>", "")[1:]
+        self._logger.info(f"get {ai_response}")
+        return {"response": ai_response}
 
     def start_app(self):
         uvicorn.run(self._app, host=self._url, port=int(os.getenv('PORT') or 8080))
