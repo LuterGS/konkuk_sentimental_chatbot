@@ -24,7 +24,7 @@ class MainFastAPI:
 
         # test
         load_dotenv(dotenv_path="envs")
-        self._ai_server_url = os.getenv("AI_SERVER_URL")
+        self._ai_server_url = f'http://{os.getenv("AI_SERVER_URL")}'
 
         self._url = '0.0.0.0'
         self._logger = TraceLogger()
@@ -80,9 +80,10 @@ class MainFastAPI:
         }
 
     async def request_conversation(self, message: Message):
-        response = requests.post(self._ai_server_url, {"userInput": message}).json()
-        ai_response: str = response["response"]
-        ai_response = ai_response.replace("<usr>", "")[1:]
+        response = requests.post(self._ai_server_url, json={"userMessage": message.userInput}).json()
+        ai_response: str = response["response"].replace("<usr>", "").lstrip(" ")
+        if ai_response == "":
+            ai_response = "AI 추론 실패!"
         self._logger.info(f"get {ai_response}")
         return {"response": ai_response}
 
