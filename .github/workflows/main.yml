@@ -46,7 +46,7 @@ jobs:
 
       - name: Set envs variable
         run: |
-          echo "${{ env.AI_SERVER_URL }}" >> ./envs
+          echo 'AI_SERVER_URL=${{ env.AI_SERVER_URL }}' >> ./envs
 
       - name: Build and Push Container
         run: |-
